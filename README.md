@@ -1,5 +1,21 @@
 # timetrackics
 
+## purpose
+
+converst an ical file to a csv file valid for some 3rd time-tracking applications.
+
+can filter by location and category or filter by finds in descrioption.
+
+it can also filter for dates, e.g. YYYY-MM.
+
+it can also sum's the hours you spent on certain "events".
+
+## requirements
+
+    pip install icalendar
+
+## usage
+
     usage: timetrackics.py [-h] [--category CATEGORY] [--location LOCATION] [--description DESCRIPTION] [--date DATE] [--header HEADER] [--debug DEBUG] [--sum SUM] filename
 
     positional arguments:
