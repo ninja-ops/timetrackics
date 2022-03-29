@@ -2,7 +2,7 @@
 
 ## purpose
 
-converst an ical file to a csv file valid for some 3rd time-tracking applications.
+converts an ical file to a csv file valid for some 3rd time-tracking applications.
 
 can filter by location and category or filter by finds in descrioption.
 
