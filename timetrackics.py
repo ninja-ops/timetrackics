@@ -13,13 +13,15 @@ def main():
   parser.add_argument("--header", help="set to something enables heading row", default="1")
   parser.add_argument("--debug", help="set to something enables debug mode", default="")
   parser.add_argument("--sum", help="prints sum hour's at the end", default="")
+  parser.add_argument("--group-by", help="group by e.g. 'day'", default="")
+
   args = parser.parse_args()
   if os.path.isfile(args.filename) == False:
     print("file '" + args.filename + "' does not exists")
     sys.exit(2)
 
   lines = []
-
+  days = {}
 
   g = open(args.filename,'rb')
   gcal = Calendar.from_ical(g.read())
@@ -91,6 +93,13 @@ def main():
           print("DEBUG ?\t\t\t! add to csv-string")
           print("")
         line = str(dtstart) + "\t" + str(dtend) + "\t" + str(time_hours) + "\t" + location + "\t" + categories_string + "\t" + summary + "\t" + str(description).replace("\n", " ")
+        day = str(dtstart)[0:10];
+        if day not in days:
+          days[day] = {}
+          days[day]['summary'] = []
+          days[day]['hours'] = 0
+        days[day]['summary'].append(str(summary))
+        days[day]['hours'] = days[day]['hours'] + time_hours
         lines.append(line)
       else:
         if args.debug != "":
@@ -101,21 +110,30 @@ def main():
 
   if args.debug != "":
     print("DEBUG ", lines)
+    print("DEBUG", days)
     print()
 
 
-  if args.header != "":
-    print("start\tend\thours\tlocation\tcategory\tsummary\tdescription")
 
   lines.sort(reverse=False)
-  for line in lines:
-    print(line)
+  if args.group_by == "":
+    if args.header != "":
+      print("start\tend\thours\tlocation\tcategory\tsummary\tdescription")
+    for line in lines:
+      print(line)
+
+  if args.group_by == "day":
+    if args.header != "":
+      print("day\thours\tsummary")
+    for item in sorted(days):
+      line = item + "\t";
+      line = line + str(days[item]['hours']) + "\t";
+      line = line + ', '.join(days[item]['summary']);
+      print(line)
 
   if args.sum != "":
     print()
-    print("==============")
-    print("Hours\t",sum_hours)
-    print("==============")
+    print("Total\t",sum_hours)
     print()
 
 main()
